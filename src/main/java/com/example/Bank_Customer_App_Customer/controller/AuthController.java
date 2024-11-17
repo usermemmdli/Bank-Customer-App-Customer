@@ -1,15 +1,11 @@
 package com.example.Bank_Customer_App_Customer.controller;
 
-import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.service.AuthService;
 import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dto.request.LoginRequest;
 import com.example.Bank_Customer_App_Customer.dto.request.SignUpRequest;
 import com.example.Bank_Customer_App_Customer.dto.response.JwtResponse;
-import com.example.Bank_Customer_App_Customer.service.JwtService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

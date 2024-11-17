@@ -15,3 +15,13 @@ spring:
         format_sql: true
       boot:allow_jdbc_metadata_access: false
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql: TRACE

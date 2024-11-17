@@ -5,6 +5,7 @@ import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository
 import com.example.Bank_Customer_App_Customer.dto.request.LoginRequest;
 import com.example.Bank_Customer_App_Customer.dto.request.SignUpRequest;
 import com.example.Bank_Customer_App_Customer.dto.response.JwtResponse;
+import com.example.Bank_Customer_App_Customer.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
