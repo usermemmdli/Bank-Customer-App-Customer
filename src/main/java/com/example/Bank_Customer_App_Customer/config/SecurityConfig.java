@@ -3,6 +3,7 @@ package com.example.Bank_Customer_App_Customer.config;
 import com.example.Bank_Customer_App_Customer.security.JwtAuthFilter;
 import com.example.Bank_Customer_App_Customer.service.CustomerDetailsService;
 import com.example.Bank_Customer_App_Customer.security.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,19 +18,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomerDetailsService customerDetailsService;
-
-    public SecurityConfig(CustomerDetailsService customerDetailsService) {
-        this.customerDetailsService = customerDetailsService;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/v1/customer/**").hasRole("USER")
                         .anyRequest().authenticated())
+                .anonymous(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtAuthFilter(jwtService, customerDetailsService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

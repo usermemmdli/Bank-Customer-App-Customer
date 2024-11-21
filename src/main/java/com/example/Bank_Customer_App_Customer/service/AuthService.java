@@ -29,15 +29,14 @@ public class AuthService {
         if (customersRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email is already taken");
         }
-        Customers customer = new Customers();
-        customer.setName(signUpRequest.getName());
-        customer.setSurname(signUpRequest.getSurname());
-        customer.setEmail(signUpRequest.getEmail());
-        customer.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        customer.setIsActive(true);
-        customer.setCreatedAt(Timestamp.from(Instant.now()));
-
-        return customersRepository.save(customer);
+        Customers customers = new Customers();
+        customers.setName(signUpRequest.getName());
+        customers.setSurname(signUpRequest.getSurname());
+        customers.setEmail(signUpRequest.getEmail());
+        customers.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+        customers.setIsActive(true);
+        customers.setCreatedAt(Timestamp.from(Instant.now()));
+        return customersRepository.save(customers);
     }
 
     public JwtResponse loginCustomer(LoginRequest loginRequest) {
@@ -51,7 +50,6 @@ public class AuthService {
 
         Customers customer = customersRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
-
         String accessToken = jwtService.createAccessToken(customer);
         String refreshToken = jwtService.createRefreshToken(customer);
 

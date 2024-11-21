@@ -5,6 +5,7 @@ import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dto.request.LoginRequest;
 import com.example.Bank_Customer_App_Customer.dto.request.SignUpRequest;
 import com.example.Bank_Customer_App_Customer.dto.response.JwtResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,13 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerCustomer(@RequestBody SignUpRequest signUpRequest) {
@@ -31,5 +29,4 @@ public class AuthController {
         JwtResponse jwtResponse = authService.loginCustomer(loginRequest);
         return ResponseEntity.ok(jwtResponse);
     }
-
 }

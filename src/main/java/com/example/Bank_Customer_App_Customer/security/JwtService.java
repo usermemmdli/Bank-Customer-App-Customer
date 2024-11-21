@@ -2,26 +2,19 @@ package com.example.Bank_Customer_App_Customer.security;
 
 import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import java.security.Key;
 import java.util.*;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-
-//    private final String SECRET_KEY = String.valueOf(generateKey());
-//
-//    //run eleyende error verib 256 bitlik key isteyirdi deye bele bir method
-//    public static String generateKey() throws Exception {
-//        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-//        keyGen.init(256); //keyin olcusunu veririk
-//        SecretKey secretKey = keyGen.generateKey(); //keyin generate olunmasi
-//        //keyi Base64 formatina cevirir
-//        return Base64.getEncoder().encodeToString(secretKey.getEncoded());
-//    }
-
-    private final String SECRET_KEY = "u8PzZ3sGx2C7dF1Vq4LmNoE8TyJwRaUkKjAiorCBHRXOcnwoI";
+    private final String SECRET_KEY = "dThQelozc0d4MkM3ZEYxVnE0TG1Ob0U4VHlKd1JhVWtLakFpb3JDQkhSWE9jbndvSQ==";
     private final long ACCESS_TOKEN_VALIDITY = 15 * 60 * 1000; // 15 deqiqe
     private final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000; // 7 gun
 
@@ -45,40 +38,24 @@ public class JwtService {
                 .compact();
     }
 
-    public String extractEmail(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-    private boolean isTokenExpired(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration()
-                .before(new Date());
-    }
-
     public Claims validateToken(String token) {
         try {
-            return Jwts.parser()
-                    .setSigningKey(SECRET_KEY)  // Secret key ile doğrulama yapıyoruz
-                    .parseClaimsJws(token)     // Token'ı parse edip claim'leri alıyoruz
-                    .getBody();                // Claims'i döndürüyoruz
-
-        } catch (SignatureException e) {
-            throw new RuntimeException("JWT signature does not match locally computed signature.");
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSignKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("JWT is expired.");
-        } catch (UnsupportedJwtException e) {
-            throw new RuntimeException("JWT token is unsupported.");
-        } catch (MalformedJwtException e) {
-            throw new RuntimeException("JWT token is malformed.");
-        } catch (Exception e) {
-            throw new RuntimeException("JWT validation failed.");
+            log.error("Token expired");
+            throw e;
+        } catch (JwtException e) {
+            log.error("Invalid token", e);
+            throw e;
         }
+    }
+
+    private Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
