@@ -3,15 +3,11 @@ package com.example.Bank_Customer_App_Customer.service;
 import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.CustomersRequest;
-import com.example.Bank_Customer_App_Customer.dto.response.CustomersResponse;
 import com.example.Bank_Customer_App_Customer.mapper.CustomersMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
