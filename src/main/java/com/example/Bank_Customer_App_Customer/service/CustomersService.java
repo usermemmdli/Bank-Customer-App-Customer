@@ -1,10 +1,10 @@
 package com.example.Bank_Customer_App_Customer.service;
 
-import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.CustomersRequest;
 import com.example.Bank_Customer_App_Customer.mapper.CustomersMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -15,7 +15,7 @@ public class CustomersService {
     private final CustomersRepository customersRepository;
     private final CustomersMapper customersMapper;
 
-    public Customers editProfile(String currentUserEmail, CustomersRequest customersRequest) {
+    public ResponseEntity<?> editProfile(String currentUserEmail, CustomersRequest customersRequest) {
         return customersRepository.findByEmail(currentUserEmail)
                 .map(customers -> {
                     if (customersRequest.getName() != null) {
@@ -28,7 +28,8 @@ public class CustomersService {
                         customers.setEmail(customersRequest.getEmail());
                     }
                     customers.setUpdatedAt(Timestamp.from(Instant.now()));
-                    return customersRepository.save(customers);
+                    customersRepository.save(customers);
+                    return ResponseEntity.ok("Customer updated successfully");
                 })
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }

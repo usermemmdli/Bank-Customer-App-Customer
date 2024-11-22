@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Builder
 public class CardRequest {
     private String name;
+    private String cardNumber;
     private String pin;
     private Double balance;
     private Boolean isActive;

@@ -1,8 +1,8 @@
 package com.example.Bank_Customer_App_Customer.controller;
 
-import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dto.request.CustomersRequest;
-import com.example.Bank_Customer_App_Customer.service.CustomersService;
+import com.example.Bank_Customer_App_Customer.dto.request.TransactionRequest;
+import com.example.Bank_Customer_App_Customer.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,25 +14,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/customer")
-public class CustomersController {
-    private final CustomersService customersService;
+@RequestMapping("api/v1/transaction")
+public class TransactionController {
+    private final TransactionService transactionService;
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping("/edit-profile")
-    public ResponseEntity<?> editProfile(@Valid @RequestBody CustomersRequest customersRequest) {
+    @PutMapping("send-money")
+    public ResponseEntity<?> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentUserEmail = authentication.getName();
-
-            ResponseEntity<?> editedCustomer = customersService.editProfile(currentUserEmail, customersRequest);
-            return ResponseEntity.ok(editedCustomer);
+            ResponseEntity<TransactionRequest> transaction = transactionService.createTransaction(currentUserEmail, transactionRequest);
+            return ResponseEntity.ok(transaction);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
-
 }
-
