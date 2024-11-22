@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
@@ -27,21 +24,39 @@ public class TransactionService {
     public ResponseEntity<TransactionRequest> createTransaction(String currentUserEmail, TransactionRequest transactionRequest) {
         Customers customer = customersRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-        Optional<Card> cardSender = cardRepository.findByCustomersId(customer.getId());
 
+        Card senderCard = cardRepository.findByCardNumber(transactionRequest.getSenderCardNumber())
+                .orElseThrow(() -> new RuntimeException("Sender card not found"));
 
-        if (transactionRequest.getDescription() == null
-                || transactionRequest.getSenderCardNumber() == null
-                || transactionRequest.getReceiverCardNumber() == null
-                || transactionRequest.getCustomersId() == null
-                || transactionRequest.getStatus() == null
-                || transactionRequest.getAmount() < 0) {
-            throw new RuntimeException("Invalid transaction request");
+        if (!senderCard.getCustomers().equals(customer)) {
+            throw new RuntimeException("Unauthorized sender card");
         }
 
+        Card receiverCard = cardRepository.findByCardNumber(transactionRequest.getReceiverCardNumber())
+                .orElseThrow(() -> new RuntimeException("Receiver card not found"));
+
+        if (transactionRequest.getAmount() == null || transactionRequest.getAmount() <= 0) {
+            throw new RuntimeException("Invalid amount for transaction");
+        }
+        if (senderCard.getBalance() < transactionRequest.getAmount()) {
+            throw new RuntimeException("Insufficient balance for transaction");
+        }
+
+        senderCard.setBalance(senderCard.getBalance() - transactionRequest.getAmount());
+        receiverCard.setBalance(receiverCard.getBalance() + transactionRequest.getAmount());
+
+        cardRepository.save(senderCard);
+        cardRepository.save(receiverCard);
 
         Transaction transaction = TransactionMapper.transactionRequestToTransaction(transactionRequest);
+        transaction.setSenderCardNumber(senderCard.getCardNumber());
+        transaction.setReceiverCardNumber(receiverCard.getCardNumber());
+        transaction.setDescription("send money");
+        transaction.setAmount(transactionRequest.getAmount());
+        transaction.setStatus("completed");
+        transaction.setCustomers(customer);
         Transaction savedTransaction = transactionRepository.save(transaction);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionRequest);
     }
 }

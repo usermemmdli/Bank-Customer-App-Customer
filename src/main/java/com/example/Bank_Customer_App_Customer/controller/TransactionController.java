@@ -1,6 +1,5 @@
 package com.example.Bank_Customer_App_Customer.controller;
 
-import com.example.Bank_Customer_App_Customer.dto.request.CustomersRequest;
 import com.example.Bank_Customer_App_Customer.dto.request.TransactionRequest;
 import com.example.Bank_Customer_App_Customer.service.TransactionService;
 import jakarta.validation.Valid;
@@ -19,7 +18,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PreAuthorize("hasRole('USER')")
-    @PutMapping("send-money")
+    @PostMapping("send-money")
     public ResponseEntity<?> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
