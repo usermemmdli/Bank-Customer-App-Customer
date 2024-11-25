@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
@@ -55,6 +58,8 @@ public class TransactionService {
         transaction.setAmount(transactionRequest.getAmount());
         transaction.setStatus("completed");
         transaction.setCustomers(customer);
+        transaction.setCreatedAt(Timestamp.from(Instant.now()));
+
         Transaction savedTransaction = transactionRepository.save(transaction);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionRequest);
