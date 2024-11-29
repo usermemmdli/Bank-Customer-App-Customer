@@ -1,6 +1,5 @@
 package com.example.Bank_Customer_App_Customer.controller;
 
-import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dto.request.CustomersRequest;
 import com.example.Bank_Customer_App_Customer.service.CustomersService;
 import jakarta.validation.Valid;

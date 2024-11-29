@@ -7,17 +7,21 @@ import com.example.Bank_Customer_App_Customer.dao.repository.CardRepository;
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.dao.repository.TransactionRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.TransactionRequest;
+import com.example.Bank_Customer_App_Customer.exception.CardNotFoundException;
+import com.example.Bank_Customer_App_Customer.exception.CustomerNotFoundException;
 import com.example.Bank_Customer_App_Customer.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final CardRepository cardRepository;
@@ -26,17 +30,20 @@ public class TransactionService {
 
     public ResponseEntity<TransactionRequest> createTransaction(String currentUserEmail, TransactionRequest transactionRequest) {
         Customers customer = customersRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
         Card senderCard = cardRepository.findByCardNumber(transactionRequest.getSenderCardNumber())
-                .orElseThrow(() -> new RuntimeException("Sender card not found"));
+                .orElseThrow(() -> new CardNotFoundException("Sender card not found"));
 
         if (!senderCard.getCustomers().equals(customer)) {
             throw new RuntimeException("Unauthorized sender card");
         }
+        if (!senderCard.getIsActive()){
+            throw new RuntimeException("Sender card is not active");
+        }
 
         Card receiverCard = cardRepository.findByCardNumber(transactionRequest.getReceiverCardNumber())
-                .orElseThrow(() -> new RuntimeException("Receiver card not found"));
+                .orElseThrow(() -> new CardNotFoundException("Receiver card not found"));
 
         if (transactionRequest.getAmount() == null || transactionRequest.getAmount() <= 0) {
             throw new RuntimeException("Invalid amount for transaction");

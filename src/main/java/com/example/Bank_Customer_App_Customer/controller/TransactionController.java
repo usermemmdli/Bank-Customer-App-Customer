@@ -18,7 +18,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("send-money")
+    @PostMapping("/send-money")
     public ResponseEntity<?> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

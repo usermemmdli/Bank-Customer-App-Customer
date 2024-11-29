@@ -28,7 +28,8 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**",
+                                         "/swagger-ui/index.html").permitAll()
                         .requestMatchers("/api/v1/customer/**").hasRole("USER")
                         .requestMatchers("/api/v1/card/**").hasRole("USER")
                         .requestMatchers("/api/v1/transaction/**").hasRole("USER")
