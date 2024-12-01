@@ -6,6 +6,7 @@ import com.example.Bank_Customer_App_Customer.dao.repository.CardRepository;
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.CardRequest;
 import com.example.Bank_Customer_App_Customer.dto.response.CardResponse;
+import com.example.Bank_Customer_App_Customer.exception.CustomerNotFoundException;
 import com.example.Bank_Customer_App_Customer.mapper.CardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class CardService {
 
     public List<CardResponse> getUserCards(String currentUserEmail) {
         Customers customer = customersRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
         Optional<Card> cards = cardRepository.findByCustomersId(customer.getId());
 

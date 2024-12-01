@@ -2,6 +2,7 @@ package com.example.Bank_Customer_App_Customer.service;
 
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.CustomersRequest;
+import com.example.Bank_Customer_App_Customer.exception.CustomerNotFoundException;
 import com.example.Bank_Customer_App_Customer.mapper.CustomersMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class CustomersService {
                     customersRepository.save(customers);
                     return ResponseEntity.ok("Customer updated successfully");
                 })
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new CustomerNotFoundException("User not found"));
     }
 
 }

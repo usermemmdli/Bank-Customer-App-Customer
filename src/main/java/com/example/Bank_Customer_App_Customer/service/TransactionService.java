@@ -8,6 +8,7 @@ import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository
 import com.example.Bank_Customer_App_Customer.dao.repository.TransactionRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.TransactionRequest;
 import com.example.Bank_Customer_App_Customer.exception.CardNotFoundException;
+import com.example.Bank_Customer_App_Customer.exception.CardUnauthorizedException;
 import com.example.Bank_Customer_App_Customer.exception.CustomerNotFoundException;
 import com.example.Bank_Customer_App_Customer.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class TransactionService {
                 .orElseThrow(() -> new CardNotFoundException("Sender card not found"));
 
         if (!senderCard.getCustomers().equals(customer)) {
-            throw new RuntimeException("Unauthorized sender card");
+            throw new CardUnauthorizedException("Unauthorized sender card");
         }
         if (!senderCard.getIsActive()){
             throw new RuntimeException("Sender card is not active");
@@ -45,6 +46,9 @@ public class TransactionService {
         Card receiverCard = cardRepository.findByCardNumber(transactionRequest.getReceiverCardNumber())
                 .orElseThrow(() -> new CardNotFoundException("Receiver card not found"));
 
+        if (!receiverCard.getIsActive()){
+            throw new RuntimeException("Receiver card is not active");
+        }
         if (transactionRequest.getAmount() == null || transactionRequest.getAmount() <= 0) {
             throw new RuntimeException("Invalid amount for transaction");
         }

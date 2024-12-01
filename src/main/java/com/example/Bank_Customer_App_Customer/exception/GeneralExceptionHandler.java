@@ -12,21 +12,23 @@ import java.util.Map;
 @ControllerAdvice
 public class GeneralExceptionHandler {
 
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<?> handleCustomerNotFoundException(CustomerNotFoundException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("error", "Resource not found");
-        body.put("message", ex.getMessage());
-        body.put("timestamp", LocalDateTime.now());
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    @ExceptionHandler({CustomerNotFoundException.class, CardNotFoundException.class})
+    public ResponseEntity<Map<String, Object>> handleNotFoundException(RuntimeException ex) {
+        Map<String, Object> body = Map.of(
+                "error", "Resource not found",
+                "message", ex.getMessage(),
+                "timestamp", LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
-    @ExceptionHandler(CardNotFoundException.class)
-    public ResponseEntity<?> handleCustomerNotFoundException(CardNotFoundException ex) {
+    @ExceptionHandler(CardUnauthorizedException.class)
+    public ResponseEntity<?> handleCardUnauthorizedException(CardUnauthorizedException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("error", "Resource not found");
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
+
 }
