@@ -34,5 +34,4 @@ public class CustomersService {
                 })
                 .orElseThrow(() -> new CustomerNotFoundException("User not found"));
     }
-
 }

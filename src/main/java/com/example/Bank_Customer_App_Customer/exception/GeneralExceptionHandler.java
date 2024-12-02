@@ -23,9 +23,27 @@ public class GeneralExceptionHandler {
     }
 
     @ExceptionHandler(CardUnauthorizedException.class)
-    public ResponseEntity<?> handleCardUnauthorizedException(CardUnauthorizedException ex) {
+    public ResponseEntity<Map<String, Object>> handleCardUnauthorizedException(CardUnauthorizedException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("error", "Resource not found");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(CardNotActiveException.class)
+    public ResponseEntity<Map<String, Object>> handleCardNotActiveException(CardNotActiveException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "Card is not active");
+        body.put("message", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CustomerLoginError.class)
+    public ResponseEntity<Map<String, Object>> handleCustomerLoginError(RuntimeException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "Email or Password is incorrect");
         body.put("message", ex.getMessage());
         body.put("timestamp", LocalDateTime.now());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);

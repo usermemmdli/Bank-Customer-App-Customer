@@ -55,4 +55,9 @@ public class Customers implements UserDetails {
     public String getUsername() {
         return "";
     }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
 }

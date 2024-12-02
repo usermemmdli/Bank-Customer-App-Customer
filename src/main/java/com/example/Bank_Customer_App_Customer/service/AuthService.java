@@ -5,6 +5,8 @@ import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository
 import com.example.Bank_Customer_App_Customer.dto.request.LoginRequest;
 import com.example.Bank_Customer_App_Customer.dto.request.SignUpRequest;
 import com.example.Bank_Customer_App_Customer.dto.response.JwtResponse;
+import com.example.Bank_Customer_App_Customer.exception.CustomerLoginError;
+import com.example.Bank_Customer_App_Customer.exception.CustomerNotFoundException;
 import com.example.Bank_Customer_App_Customer.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,7 +51,10 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         Customers customer = customersRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new CustomerLoginError("Invalid email or password"));
+        if (!customer.getIsActive()) {
+            throw new CustomerNotFoundException("Customer is not active");
+        }
         String accessToken = jwtService.createAccessToken(customer);
         String refreshToken = jwtService.createRefreshToken(customer);
 

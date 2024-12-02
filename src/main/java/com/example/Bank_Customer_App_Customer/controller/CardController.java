@@ -36,20 +36,19 @@ public class CardController {
         }
     }
 
-//    @PreAuthorize("hasRole('USER')")
-//    @PutMapping("/edit-card")
-//    public ResponseEntity<?> editCard(@Valid @RequestBody CardRequest cardRequest) {
-//        try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            String currentUserEmail = authentication.getName();
-//
-//            ResponseEntity<?> editedCard = cardService.editCard(currentUserEmail, cardRequest);
-//            return ResponseEntity.ok(editedCard);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
-//        }
-//    }
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/edit-card")
+    public ResponseEntity<?> editCard(@Valid @RequestBody CardRequest cardRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String currentUserEmail = authentication.getName();
 
+            ResponseEntity<?> editedCard = cardService.editCard(currentUserEmail, cardRequest);
+            return ResponseEntity.ok(editedCard);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
 }
