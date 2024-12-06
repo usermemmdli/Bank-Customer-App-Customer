@@ -17,6 +17,7 @@ public class CustomersMapper {
                 .id(customers.getId())
                 .name(customers.getName())
                 .surname(customers.getSurname())
+                .email(customers.getEmail())
                 .isActive(customers.getIsActive())
                 .createdAt(customers.getCreatedAt())
                 .updatedAt(customers.getUpdatedAt())

@@ -26,6 +26,7 @@ public class CardMapper {
     public static Card cardRequestToCard(CardRequest cardRequest) {
         return Card.builder()
                 .name(cardRequest.getName())
+                .cardNumber(cardRequest.getCardNumber())
                 .balance(cardRequest.getBalance())
                 .pin(cardRequest.getPin())
                 .isActive(cardRequest.getIsActive())
