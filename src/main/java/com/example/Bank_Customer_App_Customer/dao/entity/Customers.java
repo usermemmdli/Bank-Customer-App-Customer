@@ -36,6 +36,7 @@ public class Customers implements UserDetails {
     private Timestamp createdAt;
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+    @JsonIgnore
     @OneToMany(mappedBy = "customers",
             fetch = FetchType.EAGER,
             cascade = CascadeType.REMOVE)

@@ -1,6 +1,7 @@
 package com.example.Bank_Customer_App_Customer.controller;
 
 import com.example.Bank_Customer_App_Customer.dto.request.TransactionRequest;
+import com.example.Bank_Customer_App_Customer.dto.response.TransactionResponse;
 import com.example.Bank_Customer_App_Customer.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,10 @@ public class TransactionController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/send-money")
-    public ResponseEntity<?> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String currentUserEmail = authentication.getName();
-            ResponseEntity<TransactionRequest> transaction = transactionService.createTransaction(currentUserEmail, transactionRequest);
-            return ResponseEntity.ok(transaction);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserEmail = authentication.getName();
+        TransactionResponse transaction = transactionService.createTransaction(currentUserEmail, transactionRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
     }
 }

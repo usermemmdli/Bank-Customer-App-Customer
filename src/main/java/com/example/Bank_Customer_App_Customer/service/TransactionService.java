@@ -7,14 +7,13 @@ import com.example.Bank_Customer_App_Customer.dao.repository.CardRepository;
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;
 import com.example.Bank_Customer_App_Customer.dao.repository.TransactionRepository;
 import com.example.Bank_Customer_App_Customer.dto.request.TransactionRequest;
+import com.example.Bank_Customer_App_Customer.dto.response.TransactionResponse;
 import com.example.Bank_Customer_App_Customer.exception.CardNotActiveException;
 import com.example.Bank_Customer_App_Customer.exception.CardNotFoundException;
 import com.example.Bank_Customer_App_Customer.exception.CardUnauthorizedException;
 import com.example.Bank_Customer_App_Customer.exception.CustomerNotFoundException;
 import com.example.Bank_Customer_App_Customer.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,7 @@ public class TransactionService {
     private final CustomersRepository customersRepository;
     private final TransactionMapper transactionMapper;
 
-    public ResponseEntity<TransactionRequest> createTransaction(String currentUserEmail, TransactionRequest transactionRequest) {
+    public TransactionResponse createTransaction(String currentUserEmail, TransactionRequest transactionRequest) {
         Customers customer = customersRepository.findByEmail(currentUserEmail).orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
         Card senderCard = cardRepository.findByCardNumber(transactionRequest.getSenderCardNumber()).orElseThrow(() -> new CardNotFoundException("Sender card not found"));
@@ -63,7 +62,7 @@ public class TransactionService {
         cardRepository.save(senderCard);
         cardRepository.save(receiverCard);
 
-        Transaction transaction = TransactionMapper.transactionRequestToTransaction(transactionRequest);
+        Transaction transaction = transactionMapper.transactionRequestToTransaction(transactionRequest);
         transaction.setSenderCardNumber(senderCard.getCardNumber());
         transaction.setReceiverCardNumber(receiverCard.getCardNumber());
         transaction.setDescription("send money");
@@ -74,6 +73,6 @@ public class TransactionService {
 
         Transaction savedTransaction = transactionRepository.save(transaction);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(transactionRequest);
+        return transactionMapper.transactionToTransactionResponse(savedTransaction);
     }
 }

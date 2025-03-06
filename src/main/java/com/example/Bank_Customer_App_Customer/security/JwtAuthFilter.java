@@ -1,6 +1,5 @@
 package com.example.Bank_Customer_App_Customer.security;
 
-import com.example.Bank_Customer_App_Customer.service.CustomerDetailsService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

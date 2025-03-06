@@ -1,16 +1,13 @@
 package com.example.Bank_Customer_App_Customer.controller;
 
 import com.example.Bank_Customer_App_Customer.service.AuthService;
-import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dto.request.LoginRequest;
 import com.example.Bank_Customer_App_Customer.dto.request.SignUpRequest;
 import com.example.Bank_Customer_App_Customer.dto.response.JwtResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,9 +16,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerCustomer(@RequestBody SignUpRequest signUpRequest) {
-        Customers customers = authService.registerCustomer(signUpRequest);
-        return ResponseEntity.ok("Customer registered successfully");
+    @ResponseStatus(HttpStatus.CREATED)
+    public void registerCustomer(@RequestBody SignUpRequest signUpRequest) {
+        authService.registerCustomer(signUpRequest);
     }
 
     @PostMapping("/login")

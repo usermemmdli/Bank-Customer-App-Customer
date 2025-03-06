@@ -27,7 +27,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public Customers registerCustomer(SignUpRequest signUpRequest) {
+    public void registerCustomer(SignUpRequest signUpRequest) {
         if (customersRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email is already taken");
         }
@@ -38,7 +38,7 @@ public class AuthService {
         customers.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         customers.setIsActive(true);
         customers.setCreatedAt(Timestamp.from(Instant.now()));
-        return customersRepository.save(customers);
+        customersRepository.save(customers);
     }
 
     public JwtResponse loginCustomer(LoginRequest loginRequest) {

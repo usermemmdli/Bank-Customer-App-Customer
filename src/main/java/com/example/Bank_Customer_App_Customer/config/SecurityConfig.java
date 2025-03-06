@@ -1,7 +1,7 @@
 package com.example.Bank_Customer_App_Customer.config;
 
 import com.example.Bank_Customer_App_Customer.security.JwtAuthFilter;
-import com.example.Bank_Customer_App_Customer.service.CustomerDetailsService;
+import com.example.Bank_Customer_App_Customer.security.CustomerDetailsService;
 import com.example.Bank_Customer_App_Customer.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +28,8 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**",
-                                         "/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/index.html").permitAll()
                         .requestMatchers("/api/v1/customer/**").hasRole("USER")
                         .requestMatchers("/api/v1/card/**").hasRole("USER")
                         .requestMatchers("/api/v1/transaction/**").hasRole("USER")

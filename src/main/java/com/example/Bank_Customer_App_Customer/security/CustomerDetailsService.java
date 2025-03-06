@@ -1,4 +1,4 @@
-package com.example.Bank_Customer_App_Customer.service;
+package com.example.Bank_Customer_App_Customer.security;
 
 import com.example.Bank_Customer_App_Customer.dao.entity.Customers;
 import com.example.Bank_Customer_App_Customer.dao.repository.CustomersRepository;

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring")
 public class CardMapper {
-    public static CardResponse cardToCardResponse(Card card) {
+    public CardResponse cardToCardResponse(Card card) {
         return CardResponse.builder()
                 .name(card.getName())
                 .cardNumber(card.getCardNumber())
@@ -23,7 +23,7 @@ public class CardMapper {
                 .build();
     }
 
-    public static Card cardRequestToCard(CardRequest cardRequest) {
+    public Card cardRequestToCard(CardRequest cardRequest) {
         return Card.builder()
                 .name(cardRequest.getName())
                 .cardNumber(cardRequest.getCardNumber())

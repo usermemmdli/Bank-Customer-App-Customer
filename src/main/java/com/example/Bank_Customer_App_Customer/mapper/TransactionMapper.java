@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring")
 public class TransactionMapper {
-    public static TransactionResponse transactionToTransactionResponse(Transaction transaction) {
+    public TransactionResponse transactionToTransactionResponse(Transaction transaction) {
         return TransactionResponse.builder()
                 .id(transaction.getId())
                 .description(transaction.getDescription())
@@ -20,7 +20,7 @@ public class TransactionMapper {
                 .build();
     }
 
-    public static Transaction transactionRequestToTransaction(TransactionRequest transactionRequest) {
+    public Transaction transactionRequestToTransaction(TransactionRequest transactionRequest) {
         return Transaction.builder()
                 .description(transactionRequest.getDescription())
                 .senderCardNumber(transactionRequest.getSenderCardNumber())
